@@ -6,7 +6,7 @@
     <title>NVIDIA GPU Architectures 06 — Ampere Deep Dive</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Titillium+Web:ital,wght@0,300;0,400;0,600;0,700;1,400;1,700&family=Roboto+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-primary: #1b1b1a;
@@ -18,9 +18,9 @@
             --accent-dim: #b8b31544;
             --accent-glow: #b8b31533;
             --border: #363633;
-            --font-display: 'Space Grotesk', sans-serif;
-            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-            --font-body: 'Inter', sans-serif;
+            --font-display: 'Chakra Petch', sans-serif;
+            --font-mono: 'Roboto Mono', 'Roboto Mono', monospace;
+            --font-body: 'Titillium Web', sans-serif;
             --max-width: 900px;
         }
 
@@ -1056,33 +1056,33 @@
     <div class="canvas-wrap">
         <svg viewBox="0 0 720 220" width="720" height="220" xmlns="http://www.w3.org/2000/svg">
             <rect x="10" y="10" width="700" height="200" rx="10" fill="#212120" stroke="#363633"/>
-            <text x="20" y="32" fill="#9b9b95" font-family="JetBrains Mono, monospace" font-size="12">A100 80&#160;GB &mdash; 7 GPCs total, MIG enabled</text>
+            <text x="20" y="32" fill="#9b9b95" font-family="Roboto Mono, monospace" font-size="12">A100 80&#160;GB &mdash; 7 GPCs total, MIG enabled</text>
             <!-- 3g.20gb slice (3 GPCs) -->
             <rect x="20" y="50" width="295" height="140" rx="6" fill="#b8b31522" stroke="#b8b315"/>
-            <text x="35" y="75" fill="#b8b315" font-family="JetBrains Mono, monospace" font-size="13" font-weight="600">3g.20gb</text>
-            <text x="35" y="95" fill="#edede7" font-family="JetBrains Mono, monospace" font-size="11">42 SMs</text>
-            <text x="35" y="115" fill="#edede7" font-family="JetBrains Mono, monospace" font-size="11">20 GB HBM</text>
-            <text x="35" y="135" fill="#edede7" font-family="JetBrains Mono, monospace" font-size="11">20 MB L2</text>
-            <text x="35" y="170" fill="#9b9b95" font-family="JetBrains Mono, monospace" font-size="10">vLLM 13B serving</text>
+            <text x="35" y="75" fill="#b8b315" font-family="Roboto Mono, monospace" font-size="13" font-weight="600">3g.20gb</text>
+            <text x="35" y="95" fill="#edede7" font-family="Roboto Mono, monospace" font-size="11">42 SMs</text>
+            <text x="35" y="115" fill="#edede7" font-family="Roboto Mono, monospace" font-size="11">20 GB HBM</text>
+            <text x="35" y="135" fill="#edede7" font-family="Roboto Mono, monospace" font-size="11">20 MB L2</text>
+            <text x="35" y="170" fill="#9b9b95" font-family="Roboto Mono, monospace" font-size="10">vLLM 13B serving</text>
             <!-- 2g.10gb slice (2 GPCs) -->
             <rect x="325" y="50" width="200" height="140" rx="6" fill="#b8b31515" stroke="#b8b315"/>
-            <text x="340" y="75" fill="#b8b315" font-family="JetBrains Mono, monospace" font-size="13" font-weight="600">2g.10gb</text>
-            <text x="340" y="95" fill="#edede7" font-family="JetBrains Mono, monospace" font-size="11">28 SMs</text>
-            <text x="340" y="115" fill="#edede7" font-family="JetBrains Mono, monospace" font-size="11">10 GB HBM</text>
-            <text x="340" y="135" fill="#edede7" font-family="JetBrains Mono, monospace" font-size="11">10 MB L2</text>
-            <text x="340" y="170" fill="#9b9b95" font-family="JetBrains Mono, monospace" font-size="10">7B inference</text>
+            <text x="340" y="75" fill="#b8b315" font-family="Roboto Mono, monospace" font-size="13" font-weight="600">2g.10gb</text>
+            <text x="340" y="95" fill="#edede7" font-family="Roboto Mono, monospace" font-size="11">28 SMs</text>
+            <text x="340" y="115" fill="#edede7" font-family="Roboto Mono, monospace" font-size="11">10 GB HBM</text>
+            <text x="340" y="135" fill="#edede7" font-family="Roboto Mono, monospace" font-size="11">10 MB L2</text>
+            <text x="340" y="170" fill="#9b9b95" font-family="Roboto Mono, monospace" font-size="10">7B inference</text>
             <!-- 1g.5gb slice -->
             <rect x="535" y="50" width="80" height="140" rx="6" fill="#b8b3150c" stroke="#b8b315"/>
-            <text x="544" y="75" fill="#b8b315" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">1g.5gb</text>
-            <text x="544" y="95" fill="#edede7" font-family="JetBrains Mono, monospace" font-size="10">14 SMs</text>
-            <text x="544" y="115" fill="#edede7" font-family="JetBrains Mono, monospace" font-size="10">5 GB</text>
-            <text x="544" y="170" fill="#9b9b95" font-family="JetBrains Mono, monospace" font-size="10">embed</text>
+            <text x="544" y="75" fill="#b8b315" font-family="Roboto Mono, monospace" font-size="11" font-weight="600">1g.5gb</text>
+            <text x="544" y="95" fill="#edede7" font-family="Roboto Mono, monospace" font-size="10">14 SMs</text>
+            <text x="544" y="115" fill="#edede7" font-family="Roboto Mono, monospace" font-size="10">5 GB</text>
+            <text x="544" y="170" fill="#9b9b95" font-family="Roboto Mono, monospace" font-size="10">embed</text>
             <!-- 1g.5gb slice -->
             <rect x="625" y="50" width="80" height="140" rx="6" fill="#b8b3150c" stroke="#b8b315"/>
-            <text x="634" y="75" fill="#b8b315" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">1g.5gb</text>
-            <text x="634" y="95" fill="#edede7" font-family="JetBrains Mono, monospace" font-size="10">14 SMs</text>
-            <text x="634" y="115" fill="#edede7" font-family="JetBrains Mono, monospace" font-size="10">5 GB</text>
-            <text x="634" y="170" fill="#9b9b95" font-family="JetBrains Mono, monospace" font-size="10">dev</text>
+            <text x="634" y="75" fill="#b8b315" font-family="Roboto Mono, monospace" font-size="11" font-weight="600">1g.5gb</text>
+            <text x="634" y="95" fill="#edede7" font-family="Roboto Mono, monospace" font-size="10">14 SMs</text>
+            <text x="634" y="115" fill="#edede7" font-family="Roboto Mono, monospace" font-size="10">5 GB</text>
+            <text x="634" y="170" fill="#9b9b95" font-family="Roboto Mono, monospace" font-size="10">dev</text>
         </svg>
     </div>
 
