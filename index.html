@@ -822,7 +822,7 @@
 
     <div class="callout">
         <div class="callout-label">Released</div>
-        <p>GA100 (A100 40&nbsp;GB) launched May 2020. GA102 (RTX 3090) launched September 2020. The A100 80&nbsp;GB upgrade landed mid-2021. Ampere is the architecture that defined the &ldquo;LLM era&rdquo; &mdash; GPT-3, BERT-Large at scale, OPT, BLOOM, and the first wave of Llama all touched A100 silicon during training.</p>
+        <p>GA100 (A100 40&nbsp;GB) launched May 2020. GA102 (RTX 3090) launched September 2020. The A100 80&nbsp;GB upgrade was announced in November 2020 (PCIe 80&nbsp;GB in mid-2021). Ampere is the architecture that defined the &ldquo;LLM era&rdquo; &mdash; OPT, BLOOM, Megatron-Turing NLG and the first wave of Llama all trained on A100 silicon (GPT-3 itself was trained on V100s).</p>
     </div>
 
     <div class="diagram-grid cols-3">
@@ -832,7 +832,7 @@
         </div>
         <div class="diagram-panel accent-border">
             <h4>Memory</h4>
-            <p>HBM2e on GA100 (1.5&ndash;2.0 TB/s). GDDR6X on GA10x (936 GB/s on 3090). The bandwidth gap is the single biggest performance differentiator across the family.</p>
+            <p>HBM2 / HBM2e on GA100 (1.5&ndash;2.0 TB/s). GDDR6X on GA10x (936 GB/s on 3090). The bandwidth gap is the single biggest performance differentiator across the family.</p>
         </div>
         <div class="diagram-panel accent-border">
             <h4>Capability</h4>
@@ -854,13 +854,13 @@
         </div>
         <div class="diagram-panel accent-border">
             <h4>Memory and fabric</h4>
-            <p><strong>6 HBM2e stacks</strong> on a 5120-bit memory bus. Two SKUs:</p>
+            <p><strong>6 HBM stack sites (5 active)</strong> on a 5120-bit memory bus. Two SKUs:</p>
             <ul>
                 <li>A100 40&nbsp;GB &mdash; 1.5 TB/s</li>
                 <li>A100 80&nbsp;GB &mdash; 2.0 TB/s (HBM2e clocked higher)</li>
             </ul>
             <p><strong>40 MB unified L2</strong> &mdash; ~6.7&times; larger than V100's 6 MB. Split into two halves with a crossbar; the SM scheduler keeps load local.</p>
-            <p><strong>12&times; NVLink 3.0 lanes</strong>, 50 GB/s/dir each &rarr; <strong>600 GB/s aggregate</strong> off-package.</p>
+            <p><strong>12&times; NVLink 3.0 links</strong>, 25 GB/s/dir (50 GB/s bidirectional) each &rarr; <strong>600 GB/s aggregate</strong> off-package.</p>
         </div>
     </div>
 
@@ -942,7 +942,7 @@
                 <li><strong>64 INT32</strong> cores</li>
                 <li><strong>4 tensor cores</strong> (TC3)</li>
                 <li>192 KB unified L1 / shared mem</li>
-                <li>64 KB register file</li>
+                <li>256 KB register file (64K &times; 32-bit)</li>
             </ul>
         </div>
     </div>
@@ -1040,7 +1040,7 @@
                 <tr><td><strong>2g.10gb</strong></td><td>2</td><td>10 GB</td><td>~28</td><td>~10 MB</td><td>7B inference, embedding service</td></tr>
                 <tr><td><strong>3g.20gb</strong></td><td>3</td><td>20 GB</td><td>~42</td><td>~20 MB</td><td>13B inference, mid-batch serving</td></tr>
                 <tr><td><strong>4g.20gb</strong></td><td>4</td><td>20 GB</td><td>~56</td><td>~20 MB</td><td>(rare) compute-heavy with same RAM</td></tr>
-                <tr><td><strong>7g.40gb</strong></td><td>7</td><td>40 GB (or 80)</td><td>108</td><td>40 MB</td><td>The whole GPU, MIG mode &ldquo;on&rdquo;</td></tr>
+                <tr><td><strong>7g.40gb</strong></td><td>7</td><td>40 GB (or 80)</td><td>98 (7 &times; 14)</td><td>40 MB</td><td>The whole GPU, MIG mode &ldquo;on&rdquo;</td></tr>
             </tbody>
         </table>
     </div>
@@ -1056,7 +1056,7 @@
     <div class="canvas-wrap">
         <svg viewBox="0 0 720 220" width="720" height="220" xmlns="http://www.w3.org/2000/svg">
             <rect x="10" y="10" width="700" height="200" rx="10" fill="#212120" stroke="#363633"/>
-            <text x="20" y="32" fill="#9b9b95" font-family="Roboto Mono, monospace" font-size="12">A100 80&#160;GB &mdash; 7 GPCs total, MIG enabled</text>
+            <text x="20" y="32" fill="#9b9b95" font-family="Roboto Mono, monospace" font-size="12">A100 40&#160;GB &mdash; 7 GPCs total, MIG enabled</text>
             <!-- 3g.20gb slice (3 GPCs) -->
             <rect x="20" y="50" width="295" height="140" rx="6" fill="#b8b31522" stroke="#b8b315"/>
             <text x="35" y="75" fill="#b8b315" font-family="Roboto Mono, monospace" font-size="13" font-weight="600">3g.20gb</text>
@@ -1151,7 +1151,7 @@ docker run --gpus '"device=MIG-GPU-..."' vllm/vllm-openai ...
 <section class="slide" id="slide-07">
     <div class="slide-number">07</div>
     <h2>NVLink 3 + DGX A100</h2>
-    <p>NVLink 3.0 doubles per-lane bandwidth from NVLink 2.0: <strong>50 GB/s per direction per lane</strong>, vs 25 GB/s on Volta. A100 has 12 lanes &rarr; <strong>600 GB/s aggregate bidirectional</strong>. NVSwitch 2.0 is the fabric chip that ties them together.</p>
+    <p>NVLink 3.0 doubles the per-lane signalling rate from NVLink 2.0 (50 vs 25 Gb/s) but halves the lanes per link, so each link stays at <strong>25 GB/s per direction</strong>. A100 doubles the link count to 12 &rarr; <strong>600 GB/s aggregate bidirectional</strong>. NVSwitch 2.0 is the fabric chip that ties them together.</p>
 
     <div class="diagram-grid cols-2">
         <div class="diagram-panel accent-border">
@@ -1175,7 +1175,7 @@ docker run --gpus '"device=MIG-GPU-..."' vllm/vllm-openai ...
     </div>
 
     <h3>The reference platform for the GPT-3 era</h3>
-    <p>OpenAI's GPT-3 (2020), Meta's OPT-175B (2022), BLOOM (2022), Megatron-Turing NLG (2022), and most large public LLMs from this period were trained on DGX A100 or HGX A100-derived systems. The 3D-parallelism recipe (TP &times; PP &times; DP) was tuned around exactly this baseboard.</p>
+    <p>Meta's OPT-175B (2022), BLOOM (2022), Megatron-Turing NLG (2022), and most large public LLMs from this period were trained on DGX A100 or HGX A100-derived systems. The 3D-parallelism recipe (TP &times; PP &times; DP) was tuned around exactly this baseboard.</p>
 
     <h3>Worked example: TP=8 all-reduce on a 70B model</h3>
     <p>Per layer, a tensor-parallel all-reduce needs to ship one full layer's hidden state. For Llama-2-70B with hidden dim 8192 and BF16: 8192 &times; <em>seq</em> &times; 2 bytes per token. At seq=4096 that's <strong>67 MB per layer</strong>.</p>
@@ -1202,7 +1202,7 @@ docker run --gpus '"device=MIG-GPU-..."' vllm/vllm-openai ...
 <section class="slide" id="slide-08">
     <div class="slide-number">08</div>
     <h2>A100 80&nbsp;GB Upgrade &mdash; Why HBM Matters</h2>
-    <p>In <strong>mid-2021</strong>, NVIDIA shipped the A100 80&nbsp;GB. <em>Same die. Same SMs. Same NVLink.</em> The change was on the memory side: doubled HBM2e capacity (40 &rarr; 80 GB) and a 33% bandwidth bump (1.5 &rarr; 2.0 TB/s) thanks to faster HBM2e clocks.</p>
+    <p>In <strong>November 2020</strong>, NVIDIA announced the A100 80&nbsp;GB. <em>Same die. Same SMs. Same NVLink.</em> The change was on the memory side: doubled HBM capacity (40 GB HBM2 &rarr; 80 GB HBM2e) and a 31% bandwidth bump (1.5 &rarr; 2.0 TB/s) thanks to faster HBM2e clocks.</p>
 
     <div class="table-wrap">
         <table>
@@ -1210,7 +1210,7 @@ docker run --gpus '"device=MIG-GPU-..."' vllm/vllm-openai ...
                 <tr><th>Spec</th><th>A100 40&nbsp;GB</th><th>A100 80&nbsp;GB</th><th>Delta</th></tr>
             </thead>
             <tbody>
-                <tr><td>HBM2e capacity</td><td>40 GB</td><td>80 GB</td><td>+100%</td></tr>
+                <tr><td>HBM capacity</td><td>40 GB</td><td>80 GB</td><td>+100%</td></tr>
                 <tr><td>Memory bandwidth</td><td>1.555 TB/s</td><td>2.039 TB/s</td><td>+31%</td></tr>
                 <tr><td>SMs (enabled)</td><td>108</td><td>108</td><td>0%</td></tr>
                 <tr><td>L2 cache</td><td>40 MB</td><td>40 MB</td><td>0%</td></tr>
@@ -1282,7 +1282,7 @@ docker run --gpus '"device=MIG-GPU-..."' vllm/vllm-openai ...
         </table>
     </div>
 
-    <p>A single A100 80 GB at INT4 holds Llama-3-70B with ~10 GB headroom for KV-cache. Two cards via NVLink approximately double throughput on prefill and add ~70&ndash;80% on decode (TP overhead).</p>
+    <p>A single A100 80 GB at INT4 holds Llama-3-70B with ~40 GB headroom for KV-cache. Two cards via NVLink approximately double throughput on prefill and add ~70&ndash;80% on decode (TP overhead).</p>
 
     <div class="callout">
         <div class="callout-label">When to skip Ampere</div>
@@ -1440,7 +1440,7 @@ loss.backward()
             name: 'RTX A6000', vram: 48, bw: 768,
             tflopsBf16: 155, ecc: 'Yes (GDDR6)', nvlink: '112 GB/s bridge',
             mig: 'No',
-            rec: 'Best Ampere workstation card. Pair via NVLink bridge for 96 GB visible to TP=2. Used pairs run Llama-3-70B BF16 comfortably.'
+            rec: 'Best Ampere workstation card. Pair via NVLink bridge for 96 GB visible to TP=2. Used pairs run Llama-3-70B at 8-bit (~70 GB) comfortably; BF16 (140 GB) does not fit.'
         },
         a30: {
             name: 'A30', vram: 24, bw: 933,
@@ -1462,31 +1462,31 @@ loss.backward()
         },
         rtx3060: {
             name: 'RTX 3060 12 GB', vram: 12, bw: 360,
-            tflopsBf16: 51, ecc: 'No', nvlink: 'No',
+            tflopsBf16: 25.5, ecc: 'No', nvlink: 'No',
             mig: 'No',
             rec: 'The hobby-AI sweet spot. Q4_K_M Llama-3 8B at ~30 tok/s in Ollama. New it is cheap, used cheaper. No NVLink.'
         },
         rtx3070: {
             name: 'RTX 3070 8 GB', vram: 8, bw: 448,
-            tflopsBf16: 81, ecc: 'No', nvlink: 'No',
+            tflopsBf16: 40.6, ecc: 'No', nvlink: 'No',
             mig: 'No',
             rec: '8 GB is the limit &mdash; barely fits 7B Q4. Faster than 3060 once it fits, but capacity-starved for 13B+. Not recommended.'
         },
         rtx3080: {
             name: 'RTX 3080 12 GB', vram: 12, bw: 912,
-            tflopsBf16: 119, ecc: 'No', nvlink: 'No',
+            tflopsBf16: 61, ecc: 'No', nvlink: 'No',
             mig: 'No',
             rec: 'GDDR6X bandwidth (~912 GB/s) is great; 12 GB capacity holds Q4 13B comfortably. Solid mid-range gaming + AI hybrid card.'
         },
         rtx3090: {
             name: 'RTX 3090 24 GB', vram: 24, bw: 936,
-            tflopsBf16: 142, ecc: 'No', nvlink: 'bridge (112 GB/s)',
+            tflopsBf16: 71, ecc: 'No', nvlink: 'bridge (112 GB/s)',
             mig: 'No',
-            rec: 'The home-LLM legend. 24 GB GDDR6X holds AWQ-INT4 70B (just). Two with NVLink bridge run Llama-3-70B Q4 well.'
+            rec: 'The home-LLM legend. 24 GB GDDR6X holds AWQ-INT4 up to ~34B; a 70B at INT4 (~40 GB) needs two. Two with NVLink bridge run Llama-3-70B Q4 well.'
         },
         rtx3090ti: {
             name: 'RTX 3090 Ti 24 GB', vram: 24, bw: 1008,
-            tflopsBf16: 160, ecc: 'No', nvlink: 'bridge (112 GB/s)',
+            tflopsBf16: 80, ecc: 'No', nvlink: 'bridge (112 GB/s)',
             mig: 'No',
             rec: 'Last-gasp Ampere consumer flagship. 1 TB/s bandwidth pushes decode tok/s ~10% over 3090. 450 W is brutal.'
         }
