@@ -914,7 +914,7 @@
 
     <div class="callout">
         <div class="callout-label">Why a giant L2</div>
-        <p>HBM2e is fast but it isn't free. A 40 MB L2 lets transformer kernels &mdash; especially attention with KV-cache reuse &mdash; keep working sets on-die. cuDNN and cuBLAS were rewritten around this number. On Hopper this becomes 50 MB; on Blackwell B200, 50 MB per die. The Ampere L2 set the template.</p>
+        <p>HBM2e is fast but it isn't free. A 40 MB L2 lets transformer kernels &mdash; especially attention with KV-cache reuse &mdash; keep working sets on-die. cuDNN and cuBLAS were rewritten around this number. On Hopper this becomes 50 MB; on Blackwell B200, ~63 MB per die (126 MB total). The Ampere L2 set the template.</p>
     </div>
 </section>
 
